@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
+using Amazon.Runtime;
 
 namespace AWS_DynamoDB_Manager.Classes.Utils
 {
-    public class DynamoClient
+    public class DynamoClient : AmazonDynamoDBClient
     {
-        public static AmazonDynamoDBClient Client { get; private set; }
-
-        static DynamoClient()
+        public DynamoClient() : base(Profiles.Current.Credentials) { }
+        public bool Initialized => getConnectionStatus();
+        private bool getConnectionStatus()
         {
-            // Explicit static constructor
+            try
+            {
+                var request = ListTablesAsync();
+                var result = request.Result;
+                return request.Status.Equals(TaskStatus.RanToCompletion);
+            }
+            catch
+            {
+                return false;
+            }
         }
-
-        private DynamoClient()
-        {
-
-        }
-
-        public static void Initialize()
-        {
-            Client = new AmazonDynamoDBClient();
-        }
-
     }
 }
