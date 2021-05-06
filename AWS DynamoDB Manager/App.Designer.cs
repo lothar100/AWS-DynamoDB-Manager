@@ -46,5 +46,29 @@ namespace AWS_DynamoDB_Manager {
                 this["profileSource"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string defaultSourceTable {
+            get {
+                return ((string)(this["defaultSourceTable"]));
+            }
+            set {
+                this["defaultSourceTable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string defaultDestinationTable {
+            get {
+                return ((string)(this["defaultDestinationTable"]));
+            }
+            set {
+                this["defaultDestinationTable"] = value;
+            }
+        }
     }
 }
