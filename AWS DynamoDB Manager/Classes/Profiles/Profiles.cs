@@ -5,6 +5,7 @@ using Amazon.Runtime.CredentialManagement;
 using System.Linq;
 using AWS_DynamoDB_Manager.Classes.Extensions;
 using Amazon.Runtime;
+using AWS_DynamoDB_Manager.Classes.Utils;
 
 namespace AWS_DynamoDB_Manager.Classes
 {
@@ -36,7 +37,7 @@ namespace AWS_DynamoDB_Manager.Classes
         public static List<string> ProfileNames => getProfileNames();
         private static List<string> getProfileNames()
         {
-            var secureList = _netSDKFile.ListProfileNames().PrefixAll("🔒 ");
+            var secureList = _netSDKFile.ListProfileNames().PrefixAll(Constants.LOCK_PREFIX);
             var openList = _sharedFile.ListProfileNames();
 
             return secureList.Concat(openList).ToList();

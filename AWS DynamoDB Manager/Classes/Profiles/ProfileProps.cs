@@ -1,4 +1,5 @@
 ﻿using Amazon.Runtime.CredentialManagement;
+using AWS_DynamoDB_Manager.Classes.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,10 +10,10 @@ namespace AWS_DynamoDB_Manager.Classes
     {
         public ProfileProps(string input)
         {
-            if (input.Contains("🔒"))
+            if (input.Contains(Constants.LOCK))
             {
                 profileSource = "private";
-                profileName = input.Replace("🔒 ", string.Empty);
+                profileName = input.Replace(Constants.LOCK_PREFIX, string.Empty);
             }
             else
             {

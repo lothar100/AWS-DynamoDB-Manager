@@ -19,15 +19,16 @@ namespace AWS_DynamoDB_Manager
     {
         private ClientStatus _clientStatus;
         private SettingsForm _settings => new SettingsForm();
-        
+        private PreviewForm _preview => new PreviewForm();
+
         private string _sourceTable => (string)sourceTableCombo.SelectedValue;
         private string _destinationTable => (string)destinationTableCombo.SelectedValue;
 
         private List<string> _tableNames => Manager.Client.ListTablesAsync().Result.TableNames;
-        private ScanResponse _sourceScan => Manager.Client.ScanAsync(_sourceTable, new Dictionary<string, Condition>()).Result;
-        private ScanResponse _destinationScan => Manager.Client.ScanAsync(_destinationTable, new Dictionary<string, Condition>()).Result;
+        private IAmazonResponse _sourceScan => new WrappedResponse(Manager.Client.ScanAsync(_sourceTable, new Dictionary<string, Condition>()).Result);
+        private IAmazonResponse _destinationScan => new WrappedResponse(Manager.Client.ScanAsync(_destinationTable, new Dictionary<string, Condition>()).Result);
 
-        private List<Operation> _opList = new List<Operation>();
+        private List<IOperation> _opList = new List<IOperation>();
 
         public MainForm()
         {
@@ -48,6 +49,7 @@ namespace AWS_DynamoDB_Manager
         protected override void OnLoad(EventArgs e)
         {
             CheckClient();
+            UpdateOpsTable();
             base.OnLoad(e);
         }
 
@@ -60,58 +62,65 @@ namespace AWS_DynamoDB_Manager
             if (Manager.Client.Initialized)
             {
                 System.Diagnostics.Debug.WriteLine("Client Initialized");
-
-                var tableNames = _tableNames;
-                sourceTableCombo.DataSource = new List<string>(tableNames);
-                destinationTableCombo.DataSource = new List<string>(tableNames);
-
-                sourceTableCombo.TrySelectingValue(Manager.Settings.defaultSourceTable);
-                destinationTableCombo.TrySelectingValue(Manager.Settings.defaultDestinationTable);
-
+                UpdateTableSelection();
                 UpdateEffectInputs();
-
                 _clientStatus.SetSuccess();
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("Client Inactive");
-
-                sourceTableCombo.DataSource = null;
-                destinationTableCombo.DataSource = null;
+                ClearInputs();
                 _clientStatus.SetFailure();
             }
         }
 
+        private void UpdateTableSelection()
+        {
+            var tableNames = _tableNames;
+            sourceTableCombo.DataSource = new List<string>(tableNames);
+            destinationTableCombo.DataSource = new List<string>(tableNames);
+
+            sourceTableCombo.TrySelectingValue(Manager.Settings.defaultSourceTable);
+            destinationTableCombo.TrySelectingValue(Manager.Settings.defaultDestinationTable);
+        }
+
+        private void ClearInputs()
+        {
+            sourceTableCombo.DataSource = null;
+            destinationTableCombo.DataSource = null;
+            sourceSchema_cb.DataSource = null;
+            sourceValue_cb.DataSource = null;
+            sourceType_cb1.DataSource = null;
+            destinationSchema_cb.DataSource = null;
+            destinationType_cb.DataSource = null;
+        }
+
         private void UpdateEffectInputs()
         {
-            var sourceSchemaList = ConvertUtils.ToStringList(_sourceScan);
-            sourceSchema_cb1.DataSource = new List<string>(sourceSchemaList);
-            sourceSchema_cb2.DataSource = new List<string>(sourceSchemaList);
-            sourceSchema_cb3.DataSource = new List<string>(sourceSchemaList);
+            var sourceScan = _sourceScan;
+            var destinationScan = _destinationScan;
+            var sourceKeyList = ConvertUtils.ToKeyList(sourceScan);
+            var destinationKeyList = ConvertUtils.ToKeyList(destinationScan);
+            var sourceAttributeLookup = ConvertUtils.ToAttributeDictionary(sourceScan);
 
-            var destinationSchemaList = ConvertUtils.ToStringList(_destinationScan);
-            destinationSchema_cb1.DataSource = new List<string>(destinationSchemaList);
-            destinationSchema_cb2.DataSource = new List<string>(destinationSchemaList);
-            destinationSchema_cb3.DataSource = new List<string>(destinationSchemaList);
+            sourceSchema_cb.DataSource = new List<string>(sourceKeyList);
+            sourceValue_cb.DataSource = new List<string>(sourceKeyList);
+
+            var formattedDictionary = sourceAttributeLookup
+                .ToDictionary(pair => $"{pair.Key}: {{{pair.Value}}}", pair => KeyValuePair.Create(pair.Key, pair.Value));
+            sourceType_cb1.DataSource = new BindingSource(formattedDictionary, null);
+            sourceType_cb1.DisplayMember = "Key";
+            sourceType_cb1.ValueMember = "Value";
+
+            destinationSchema_cb.DataSource = new List<string>(destinationKeyList);
+
+            destinationType_cb.DataSource = new List<string>(Constants.ATTRIBUTE_TYPES);
         }
 
         private void showBtn_Click(object sender, EventArgs e)
         {
-
-            Manager.Settings.defaultSourceTable = _sourceTable;
-            Manager.Settings.defaultDestinationTable = _destinationTable;
-            Manager.Settings.Save();
-
-            var describe = Manager.Client.DescribeTableAsync(_sourceTable).Result;
-            var scan = Manager.Client.ScanAsync(_sourceTable, new Dictionary<string, Condition>()).Result;
-            var attributes = new Dictionary<string, AttributeValue>()
-            {
-                { "pk", new AttributeValue { S = "100" } },
-                { "sk", new AttributeValue { S = "User" } }
-            };
-            var item = Manager.Client.GetItemAsync(_sourceTable, attributes).Result;
-
-            var stop = 0;
+            // TEMP DEBUG AREA
+            
         }
 
         private void settingsMenuItem_Click(object sender, EventArgs e)
@@ -126,10 +135,33 @@ namespace AWS_DynamoDB_Manager
 
         private void schema_btn_Click(object sender, EventArgs e)
         {
-            var sourceField = (string)sourceSchema_cb1.SelectedValue;
-            var destinationField = (string)destinationSchema_cb1.SelectedValue;
+            var sourceField = (string)sourceSchema_cb.SelectedValue;
+            var destinationField = (string)destinationSchema_cb.SelectedValue;
 
-            _opList.Add(new Operation() { Effect = "Schema", Change = $"'{sourceField}' → '{destinationField}'" });
+            _opList.Add(new SchemaOp(sourceField, destinationField));
+
+            UpdateOpsTable();
+        }
+
+        private void value_btn_Click(object sender, EventArgs e)
+        {
+            var sourceField = sourceValue_cb.SelectedText;
+            var oldValue = sourceValue_tb.Text;
+            var newValue = destinationValue_tb.Text;
+
+            _opList.Add(new ValueOp(sourceField, oldValue, newValue));
+
+            UpdateOpsTable();
+        }
+
+        private void type_btn_Click(object sender, EventArgs e)
+        {
+            var sourceTypeSelection = (KeyValuePair<string, string>)sourceType_cb1.SelectedValue;
+            var sourceField = sourceTypeSelection.Key;
+            var oldType = sourceTypeSelection.Value;
+            var newType = (string)destinationType_cb.SelectedValue;
+
+            _opList.Add(new TypeOp(sourceField, oldType, newType));
 
             UpdateOpsTable();
         }
@@ -147,11 +179,23 @@ namespace AWS_DynamoDB_Manager
             }
         }
 
-        private void UpdateOpsTable() => operations_dgv.DataSource = ConvertUtils.ToDataSource(_opList);
+        private void UpdateOpsTable()
+        {
+            operations_dgv.DataSource = ConvertUtils.ToDataSource(_opList);
+            operations_dgv.ClearSelection();
+        }
 
         private void Preview(int rowIndex)
         {
+            if (rowIndex >= _opList.Count) return;
 
+            Manager.Preview.SourceTable = _sourceTable;
+            Manager.Preview.DestinationTable = _destinationTable;
+            Manager.Preview.Operation = _opList[rowIndex];
+            Manager.Preview.SourceView = null;
+            Manager.Preview.DestinationView = null;
+
+            _preview.ShowDialog(this);
         }
 
         private void MoveUp(int rowIndex)
@@ -168,10 +212,26 @@ namespace AWS_DynamoDB_Manager
 
         private void Delete(int rowIndex)
         {
+            if (_opList.Count == 0) return;
             _opList.RemoveAt(rowIndex);
             UpdateOpsTable();
         }
 
+        private void sourceTableCombo_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Manager.Settings.defaultSourceTable = _sourceTable;
+            Manager.Settings.Save();
+            _opList.Clear();
+            UpdateOpsTable();
+        }
+
+        private void destinationTableCombo_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Manager.Settings.defaultDestinationTable = _destinationTable;
+            Manager.Settings.Save();
+            _opList.Clear();
+            UpdateOpsTable();
+        }
 
     }
 }

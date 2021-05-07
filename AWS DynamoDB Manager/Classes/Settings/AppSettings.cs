@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AWS_DynamoDB_Manager.Classes.Utils;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,7 +33,7 @@ namespace AWS_DynamoDB_Manager.Classes
 
         private string getPrefixedName()
         {
-            if (profileSource.Equals("private")) return "🔒 " + profileName;
+            if (profileSource.Equals("private")) return Constants.LOCK_PREFIX + profileName;
             return profileName;
         }
     }

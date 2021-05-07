@@ -29,9 +29,9 @@ namespace AWS_DynamoDB_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,20 +53,17 @@ namespace AWS_DynamoDB_Manager
             this.col_up = new System.Windows.Forms.DataGridViewButtonColumn();
             this.col_down = new System.Windows.Forms.DataGridViewButtonColumn();
             this.col_delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.sourceSchema_cb1 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
-            this.destinationSchema_cb1 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
+            this.sourceSchema_cb = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
+            this.destinationSchema_cb = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.schema_btn = new System.Windows.Forms.Button();
-            this.data_btn = new System.Windows.Forms.Button();
+            this.value_btn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.sourceSchema_cb2 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
-            this.destinationSchema_cb2 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
+            this.sourceValue_tb = new System.Windows.Forms.TextBox();
+            this.destinationValue_tb = new System.Windows.Forms.TextBox();
+            this.sourceValue_cb = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.type_btn = new System.Windows.Forms.Button();
-            this.destinationSchema_cb3 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
-            this.sourceSchema_cb3 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
-            this.destinationType_cb1 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.sourceType_cb1 = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
+            this.destinationType_cb = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.mainMenu.SuspendLayout();
@@ -80,7 +77,7 @@ namespace AWS_DynamoDB_Manager
             this.fileMenuItem});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(770, 24);
+            this.mainMenu.Size = new System.Drawing.Size(624, 24);
             this.mainMenu.TabIndex = 0;
             this.mainMenu.Text = "main menu";
             // 
@@ -133,6 +130,7 @@ namespace AWS_DynamoDB_Manager
             this.sourceTableCombo.Name = "sourceTableCombo";
             this.sourceTableCombo.Size = new System.Drawing.Size(300, 23);
             this.sourceTableCombo.TabIndex = 5;
+            this.sourceTableCombo.SelectionChangeCommitted += new System.EventHandler(this.sourceTableCombo_SelectionChangeCommitted);
             // 
             // statusGroup
             // 
@@ -181,6 +179,7 @@ namespace AWS_DynamoDB_Manager
             this.destinationTableCombo.Name = "destinationTableCombo";
             this.destinationTableCombo.Size = new System.Drawing.Size(300, 23);
             this.destinationTableCombo.TabIndex = 7;
+            this.destinationTableCombo.SelectionChangeCommitted += new System.EventHandler(this.destinationTableCombo_SelectionChangeCommitted);
             // 
             // dest_label
             // 
@@ -204,19 +203,20 @@ namespace AWS_DynamoDB_Manager
             this.col_down,
             this.col_delete});
             this.operations_dgv.Location = new System.Drawing.Point(12, 162);
+            this.operations_dgv.MultiSelect = false;
             this.operations_dgv.Name = "operations_dgv";
             this.operations_dgv.ReadOnly = true;
             this.operations_dgv.RowHeadersVisible = false;
             this.operations_dgv.RowTemplate.Height = 25;
-            this.operations_dgv.Size = new System.Drawing.Size(574, 106);
+            this.operations_dgv.Size = new System.Drawing.Size(596, 106);
             this.operations_dgv.TabIndex = 9;
             this.operations_dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.operations_dgv_CellContentClick);
             // 
             // col_order
             // 
             this.col_order.DataPropertyName = "Order";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_order.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_order.DefaultCellStyle = dataGridViewCellStyle4;
             this.col_order.FillWeight = 3.5F;
             this.col_order.HeaderText = "Order";
             this.col_order.MinimumWidth = 45;
@@ -226,8 +226,8 @@ namespace AWS_DynamoDB_Manager
             // col_effect
             // 
             this.col_effect.DataPropertyName = "Effect";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_effect.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_effect.DefaultCellStyle = dataGridViewCellStyle5;
             this.col_effect.FillWeight = 10F;
             this.col_effect.HeaderText = "Effect";
             this.col_effect.MinimumWidth = 100;
@@ -237,8 +237,8 @@ namespace AWS_DynamoDB_Manager
             // col_change
             // 
             this.col_change.DataPropertyName = "Change";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_change.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_change.DefaultCellStyle = dataGridViewCellStyle6;
             this.col_change.FillWeight = 10F;
             this.col_change.HeaderText = "Change";
             this.col_change.MinimumWidth = 100;
@@ -277,25 +277,25 @@ namespace AWS_DynamoDB_Manager
             this.col_delete.ReadOnly = true;
             this.col_delete.Text = "Delete";
             // 
-            // sourceSchema_cb1
+            // sourceSchema_cb
             // 
-            this.sourceSchema_cb1.FormattingEnabled = true;
-            this.sourceSchema_cb1.Location = new System.Drawing.Point(163, 296);
-            this.sourceSchema_cb1.Name = "sourceSchema_cb1";
-            this.sourceSchema_cb1.Size = new System.Drawing.Size(121, 23);
-            this.sourceSchema_cb1.TabIndex = 10;
+            this.sourceSchema_cb.FormattingEnabled = true;
+            this.sourceSchema_cb.Location = new System.Drawing.Point(163, 296);
+            this.sourceSchema_cb.Name = "sourceSchema_cb";
+            this.sourceSchema_cb.Size = new System.Drawing.Size(121, 23);
+            this.sourceSchema_cb.TabIndex = 10;
             // 
-            // destinationSchema_cb1
+            // destinationSchema_cb
             // 
-            this.destinationSchema_cb1.FormattingEnabled = true;
-            this.destinationSchema_cb1.Location = new System.Drawing.Point(314, 296);
-            this.destinationSchema_cb1.Name = "destinationSchema_cb1";
-            this.destinationSchema_cb1.Size = new System.Drawing.Size(121, 23);
-            this.destinationSchema_cb1.TabIndex = 11;
+            this.destinationSchema_cb.FormattingEnabled = true;
+            this.destinationSchema_cb.Location = new System.Drawing.Point(314, 296);
+            this.destinationSchema_cb.Name = "destinationSchema_cb";
+            this.destinationSchema_cb.Size = new System.Drawing.Size(121, 23);
+            this.destinationSchema_cb.TabIndex = 11;
             // 
             // schema_btn
             // 
-            this.schema_btn.Location = new System.Drawing.Point(616, 296);
+            this.schema_btn.Location = new System.Drawing.Point(464, 296);
             this.schema_btn.Name = "schema_btn";
             this.schema_btn.Size = new System.Drawing.Size(144, 23);
             this.schema_btn.TabIndex = 12;
@@ -303,14 +303,15 @@ namespace AWS_DynamoDB_Manager
             this.schema_btn.UseVisualStyleBackColor = true;
             this.schema_btn.Click += new System.EventHandler(this.schema_btn_Click);
             // 
-            // data_btn
+            // value_btn
             // 
-            this.data_btn.Location = new System.Drawing.Point(616, 345);
-            this.data_btn.Name = "data_btn";
-            this.data_btn.Size = new System.Drawing.Size(144, 23);
-            this.data_btn.TabIndex = 13;
-            this.data_btn.Text = "Add Data Effect";
-            this.data_btn.UseVisualStyleBackColor = true;
+            this.value_btn.Location = new System.Drawing.Point(464, 397);
+            this.value_btn.Name = "value_btn";
+            this.value_btn.Size = new System.Drawing.Size(144, 23);
+            this.value_btn.TabIndex = 13;
+            this.value_btn.Text = "Add Value Effect";
+            this.value_btn.UseVisualStyleBackColor = true;
+            this.value_btn.Click += new System.EventHandler(this.value_btn_Click);
             // 
             // label1
             // 
@@ -321,76 +322,53 @@ namespace AWS_DynamoDB_Manager
             this.label1.TabIndex = 14;
             this.label1.Text = "to";
             // 
-            // textBox1
+            // sourceValue_tb
             // 
-            this.textBox1.Location = new System.Drawing.Point(163, 345);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 23);
-            this.textBox1.TabIndex = 15;
+            this.sourceValue_tb.Location = new System.Drawing.Point(163, 397);
+            this.sourceValue_tb.Name = "sourceValue_tb";
+            this.sourceValue_tb.Size = new System.Drawing.Size(121, 23);
+            this.sourceValue_tb.TabIndex = 15;
             // 
-            // textBox2
+            // destinationValue_tb
             // 
-            this.textBox2.Location = new System.Drawing.Point(465, 345);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(121, 23);
-            this.textBox2.TabIndex = 16;
+            this.destinationValue_tb.Location = new System.Drawing.Point(314, 397);
+            this.destinationValue_tb.Name = "destinationValue_tb";
+            this.destinationValue_tb.Size = new System.Drawing.Size(121, 23);
+            this.destinationValue_tb.TabIndex = 16;
             // 
-            // sourceSchema_cb2
+            // sourceValue_cb
             // 
-            this.sourceSchema_cb2.FormattingEnabled = true;
-            this.sourceSchema_cb2.Location = new System.Drawing.Point(12, 345);
-            this.sourceSchema_cb2.Name = "sourceSchema_cb2";
-            this.sourceSchema_cb2.Size = new System.Drawing.Size(121, 23);
-            this.sourceSchema_cb2.TabIndex = 17;
-            // 
-            // destinationSchema_cb2
-            // 
-            this.destinationSchema_cb2.FormattingEnabled = true;
-            this.destinationSchema_cb2.Location = new System.Drawing.Point(314, 345);
-            this.destinationSchema_cb2.Name = "destinationSchema_cb2";
-            this.destinationSchema_cb2.Size = new System.Drawing.Size(121, 23);
-            this.destinationSchema_cb2.TabIndex = 18;
+            this.sourceValue_cb.FormattingEnabled = true;
+            this.sourceValue_cb.Location = new System.Drawing.Point(12, 397);
+            this.sourceValue_cb.Name = "sourceValue_cb";
+            this.sourceValue_cb.Size = new System.Drawing.Size(121, 23);
+            this.sourceValue_cb.TabIndex = 17;
             // 
             // type_btn
             // 
-            this.type_btn.Location = new System.Drawing.Point(616, 397);
+            this.type_btn.Location = new System.Drawing.Point(464, 345);
             this.type_btn.Name = "type_btn";
             this.type_btn.Size = new System.Drawing.Size(144, 23);
             this.type_btn.TabIndex = 19;
             this.type_btn.Text = "Add Type Effect";
             this.type_btn.UseVisualStyleBackColor = true;
-            // 
-            // destinationSchema_cb3
-            // 
-            this.destinationSchema_cb3.FormattingEnabled = true;
-            this.destinationSchema_cb3.Location = new System.Drawing.Point(314, 397);
-            this.destinationSchema_cb3.Name = "destinationSchema_cb3";
-            this.destinationSchema_cb3.Size = new System.Drawing.Size(121, 23);
-            this.destinationSchema_cb3.TabIndex = 21;
-            // 
-            // sourceSchema_cb3
-            // 
-            this.sourceSchema_cb3.FormattingEnabled = true;
-            this.sourceSchema_cb3.Location = new System.Drawing.Point(12, 397);
-            this.sourceSchema_cb3.Name = "sourceSchema_cb3";
-            this.sourceSchema_cb3.Size = new System.Drawing.Size(121, 23);
-            this.sourceSchema_cb3.TabIndex = 20;
-            // 
-            // destinationType_cb1
-            // 
-            this.destinationType_cb1.FormattingEnabled = true;
-            this.destinationType_cb1.Location = new System.Drawing.Point(465, 397);
-            this.destinationType_cb1.Name = "destinationType_cb1";
-            this.destinationType_cb1.Size = new System.Drawing.Size(121, 23);
-            this.destinationType_cb1.TabIndex = 23;
+            this.type_btn.Click += new System.EventHandler(this.type_btn_Click);
             // 
             // sourceType_cb1
             // 
             this.sourceType_cb1.FormattingEnabled = true;
-            this.sourceType_cb1.Location = new System.Drawing.Point(163, 397);
+            this.sourceType_cb1.Location = new System.Drawing.Point(163, 345);
             this.sourceType_cb1.Name = "sourceType_cb1";
             this.sourceType_cb1.Size = new System.Drawing.Size(121, 23);
-            this.sourceType_cb1.TabIndex = 22;
+            this.sourceType_cb1.TabIndex = 20;
+            // 
+            // destinationType_cb
+            // 
+            this.destinationType_cb.FormattingEnabled = true;
+            this.destinationType_cb.Location = new System.Drawing.Point(314, 345);
+            this.destinationType_cb.Name = "destinationType_cb";
+            this.destinationType_cb.Size = new System.Drawing.Size(121, 23);
+            this.destinationType_cb.TabIndex = 23;
             // 
             // label2
             // 
@@ -414,23 +392,20 @@ namespace AWS_DynamoDB_Manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(770, 488);
+            this.ClientSize = new System.Drawing.Size(624, 488);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.destinationType_cb1);
+            this.Controls.Add(this.destinationType_cb);
             this.Controls.Add(this.sourceType_cb1);
-            this.Controls.Add(this.destinationSchema_cb3);
-            this.Controls.Add(this.sourceSchema_cb3);
             this.Controls.Add(this.type_btn);
-            this.Controls.Add(this.destinationSchema_cb2);
-            this.Controls.Add(this.sourceSchema_cb2);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.sourceValue_cb);
+            this.Controls.Add(this.destinationValue_tb);
+            this.Controls.Add(this.sourceValue_tb);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.data_btn);
+            this.Controls.Add(this.value_btn);
             this.Controls.Add(this.schema_btn);
-            this.Controls.Add(this.destinationSchema_cb1);
-            this.Controls.Add(this.sourceSchema_cb1);
+            this.Controls.Add(this.destinationSchema_cb);
+            this.Controls.Add(this.sourceSchema_cb);
             this.Controls.Add(this.operations_dgv);
             this.Controls.Add(this.dest_label);
             this.Controls.Add(this.destinationTableCombo);
@@ -444,6 +419,7 @@ namespace AWS_DynamoDB_Manager
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AWS DynamoDB Manager";
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
@@ -471,20 +447,17 @@ namespace AWS_DynamoDB_Manager
         private System.Windows.Forms.Label dest_label;
         private System.Windows.Forms.Label profile_label;
         private System.Windows.Forms.DataGridView operations_dgv;
-        private Classes.Controls.ImprovedComboBox sourceSchema_cb1;
-        private Classes.Controls.ImprovedComboBox destinationSchema_cb1;
+        private Classes.Controls.ImprovedComboBox sourceSchema_cb;
+        private Classes.Controls.ImprovedComboBox destinationSchema_cb;
         private System.Windows.Forms.Button schema_btn;
-        private System.Windows.Forms.Button data_btn;
+        private System.Windows.Forms.Button value_btn;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private Classes.Controls.ImprovedComboBox sourceSchema_cb2;
-        private Classes.Controls.ImprovedComboBox destinationSchema_cb2;
+        private System.Windows.Forms.TextBox sourceValue_tb;
+        private System.Windows.Forms.TextBox destinationValue_tb;
+        private Classes.Controls.ImprovedComboBox sourceValue_cb;
         private System.Windows.Forms.Button type_btn;
-        private Classes.Controls.ImprovedComboBox destinationSchema_cb3;
-        private Classes.Controls.ImprovedComboBox sourceSchema_cb3;
-        private Classes.Controls.ImprovedComboBox destinationType_cb1;
         private Classes.Controls.ImprovedComboBox sourceType_cb1;
+        private Classes.Controls.ImprovedComboBox destinationType_cb;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_order;
