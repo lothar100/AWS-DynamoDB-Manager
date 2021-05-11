@@ -1,29 +1,34 @@
 ﻿using Amazon.DynamoDBv2.Model;
-using AWS_DynamoDB_Manager.Classes.Utils;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace AWS_DynamoDB_Manager.Classes.Extensions
 {
     public static class DataExtensions
     {
+        public static DataTable SortColumns(this DataTable table, IEnumerable<string> names, int start = 0)
+        {
+            int i = start;
+            foreach(var name in names)
+            {
+                if (table.Columns.Contains(name))
+                {
+                    table.Columns[name].SetOrdinal(i);
+                    i++;
+                }
+            }
+
+            return table;
+        }
         public static DataTable ColumnsAddRange(this DataTable table, DataColumn[] columns)
         {
             table.Columns.AddRange(columns);
             return table;
         }
 
-        public static DataSet Fill(this DataSet dataSet, DataTable table)
+        public static DataTable Fill(this DataTable table, List<Dictionary<string, AttributeValue>> Items)
         {
-            dataSet.Tables.Add(table);
-            return dataSet;
-        }
-
-        public static DataTable Fill(this DataTable table, IAmazonResponse response)
-        {
-            response.Items.ForEach(item =>
+            Items.ForEach(item =>
             {
                 table.Rows.Add(
                     table.NewRow().Fill(item)
@@ -37,7 +42,7 @@ namespace AWS_DynamoDB_Manager.Classes.Extensions
             var pair = rowValues.GetEnumerator();
             while (pair.MoveNext())
             {
-                dataRow[pair.Current.Key] = ConvertUtils.ToObject(pair.Current.Value);
+                dataRow[pair.Current.Key] = pair.Current.Value.GetValue();
             }
             return dataRow;
         }

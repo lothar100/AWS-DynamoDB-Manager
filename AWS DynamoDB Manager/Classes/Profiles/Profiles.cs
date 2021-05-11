@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
-using System.Linq;
 using AWS_DynamoDB_Manager.Classes.Extensions;
-using Amazon.Runtime;
 using AWS_DynamoDB_Manager.Classes.Utils;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AWS_DynamoDB_Manager.Classes
 {

@@ -5,12 +5,6 @@ using AWS_DynamoDB_Manager.Classes.Utils;
 using AWS_DynamoDB_Manager.Forms;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AWS_DynamoDB_Manager
@@ -25,8 +19,8 @@ namespace AWS_DynamoDB_Manager
         private string _destinationTable => (string)destinationTableCombo.SelectedValue;
 
         private List<string> _tableNames => Manager.Client.ListTablesAsync().Result.TableNames;
-        private IAmazonResponse _sourceScan => new WrappedResponse(Manager.Client.ScanAsync(_sourceTable, new Dictionary<string, Condition>()).Result);
-        private IAmazonResponse _destinationScan => new WrappedResponse(Manager.Client.ScanAsync(_destinationTable, new Dictionary<string, Condition>()).Result);
+        private ScanResponse _sourceScan => Manager.Client.ScanAsync(_sourceTable, new Dictionary<string, Condition>()).Result;
+        private ScanResponse _destinationScan => Manager.Client.ScanAsync(_destinationTable, new Dictionary<string, Condition>()).Result;
 
         private List<IOperation> _opList = new List<IOperation>();
 
@@ -101,26 +95,17 @@ namespace AWS_DynamoDB_Manager
             var destinationScan = _destinationScan;
             var sourceKeyList = ConvertUtils.ToKeyList(sourceScan);
             var destinationKeyList = ConvertUtils.ToKeyList(destinationScan);
-            var sourceAttributeLookup = ConvertUtils.ToAttributeDictionary(sourceScan);
 
             sourceSchema_cb.DataSource = new List<string>(sourceKeyList);
             sourceValue_cb.DataSource = new List<string>(sourceKeyList);
 
-            var formattedDictionary = sourceAttributeLookup
-                .ToDictionary(pair => $"{pair.Key}: {{{pair.Value}}}", pair => KeyValuePair.Create(pair.Key, pair.Value));
-            sourceType_cb1.DataSource = new BindingSource(formattedDictionary, null);
+            sourceType_cb1.DataSource = new FieldTypeFormat(sourceScan).BindingSource;
             sourceType_cb1.DisplayMember = "Key";
             sourceType_cb1.ValueMember = "Value";
 
             destinationSchema_cb.DataSource = new List<string>(destinationKeyList);
 
             destinationType_cb.DataSource = new List<string>(Constants.ATTRIBUTE_TYPES);
-        }
-
-        private void showBtn_Click(object sender, EventArgs e)
-        {
-            // TEMP DEBUG AREA
-            
         }
 
         private void settingsMenuItem_Click(object sender, EventArgs e)
@@ -145,7 +130,7 @@ namespace AWS_DynamoDB_Manager
 
         private void value_btn_Click(object sender, EventArgs e)
         {
-            var sourceField = sourceValue_cb.SelectedText;
+            var sourceField = (string)sourceValue_cb.SelectedValue;
             var oldValue = sourceValue_tb.Text;
             var newValue = destinationValue_tb.Text;
 
@@ -181,19 +166,21 @@ namespace AWS_DynamoDB_Manager
 
         private void UpdateOpsTable()
         {
+            Manager.SourceTable = Manager.Settings.defaultSourceTable;
+            Manager.DestinationTable = Manager.Settings.defaultDestinationTable;
             operations_dgv.DataSource = ConvertUtils.ToDataSource(_opList);
             operations_dgv.ClearSelection();
+            run_btn.Enabled = _opList.Count > 0;
         }
 
         private void Preview(int rowIndex)
         {
             if (rowIndex >= _opList.Count) return;
 
-            Manager.Preview.SourceTable = _sourceTable;
-            Manager.Preview.DestinationTable = _destinationTable;
-            Manager.Preview.Operation = _opList[rowIndex];
-            Manager.Preview.SourceView = null;
-            Manager.Preview.DestinationView = null;
+            Manager.OpRunner.Operations = _opList;
+            Manager.OpRunner.OpIndex = rowIndex;
+            Manager.OpRunner.SourceView = null;
+            Manager.OpRunner.DestinationView = null;
 
             _preview.ShowDialog(this);
         }
@@ -233,5 +220,12 @@ namespace AWS_DynamoDB_Manager
             UpdateOpsTable();
         }
 
+        private void run_btn_Click(object sender, EventArgs e)
+        {
+            Manager.OpRunner.Operations = _opList;
+            Manager.OpRunner.RunOperations();
+            _opList.Clear();
+            UpdateOpsTable();
+        }
     }
 }

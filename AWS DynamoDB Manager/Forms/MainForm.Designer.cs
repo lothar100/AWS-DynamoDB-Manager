@@ -29,15 +29,14 @@ namespace AWS_DynamoDB_Manager
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.source_label = new System.Windows.Forms.Label();
-            this.showBtn = new System.Windows.Forms.Button();
             this.sourceTableCombo = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.statusGroup = new System.Windows.Forms.GroupBox();
             this.profile_label = new System.Windows.Forms.Label();
@@ -66,6 +65,7 @@ namespace AWS_DynamoDB_Manager
             this.destinationType_cb = new AWS_DynamoDB_Manager.Classes.Controls.ImprovedComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.run_btn = new System.Windows.Forms.Button();
             this.mainMenu.SuspendLayout();
             this.statusGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.operations_dgv)).BeginInit();
@@ -113,16 +113,6 @@ namespace AWS_DynamoDB_Manager
             this.source_label.TabIndex = 1;
             this.source_label.Text = "Source Table";
             // 
-            // showBtn
-            // 
-            this.showBtn.Location = new System.Drawing.Point(7, 59);
-            this.showBtn.Name = "showBtn";
-            this.showBtn.Size = new System.Drawing.Size(75, 23);
-            this.showBtn.TabIndex = 3;
-            this.showBtn.Text = "Test";
-            this.showBtn.UseVisualStyleBackColor = true;
-            this.showBtn.Click += new System.EventHandler(this.showBtn_Click);
-            // 
             // sourceTableCombo
             // 
             this.sourceTableCombo.FormattingEnabled = true;
@@ -137,10 +127,9 @@ namespace AWS_DynamoDB_Manager
             this.statusGroup.Controls.Add(this.profile_label);
             this.statusGroup.Controls.Add(this.clientStatusMarker);
             this.statusGroup.Controls.Add(this.clientStatusLabel);
-            this.statusGroup.Controls.Add(this.showBtn);
-            this.statusGroup.Location = new System.Drawing.Point(386, 39);
+            this.statusGroup.Location = new System.Drawing.Point(379, 27);
             this.statusGroup.Name = "statusGroup";
-            this.statusGroup.Size = new System.Drawing.Size(200, 100);
+            this.statusGroup.Size = new System.Drawing.Size(200, 68);
             this.statusGroup.TabIndex = 6;
             this.statusGroup.TabStop = false;
             this.statusGroup.Text = "Status";
@@ -215,8 +204,8 @@ namespace AWS_DynamoDB_Manager
             // col_order
             // 
             this.col_order.DataPropertyName = "Order";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_order.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_order.DefaultCellStyle = dataGridViewCellStyle1;
             this.col_order.FillWeight = 3.5F;
             this.col_order.HeaderText = "Order";
             this.col_order.MinimumWidth = 45;
@@ -226,8 +215,8 @@ namespace AWS_DynamoDB_Manager
             // col_effect
             // 
             this.col_effect.DataPropertyName = "Effect";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_effect.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_effect.DefaultCellStyle = dataGridViewCellStyle2;
             this.col_effect.FillWeight = 10F;
             this.col_effect.HeaderText = "Effect";
             this.col_effect.MinimumWidth = 100;
@@ -237,8 +226,8 @@ namespace AWS_DynamoDB_Manager
             // col_change
             // 
             this.col_change.DataPropertyName = "Change";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.col_change.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.col_change.DefaultCellStyle = dataGridViewCellStyle3;
             this.col_change.FillWeight = 10F;
             this.col_change.HeaderText = "Change";
             this.col_change.MinimumWidth = 100;
@@ -388,11 +377,23 @@ namespace AWS_DynamoDB_Manager
             this.label3.TabIndex = 25;
             this.label3.Text = "to";
             // 
+            // run_btn
+            // 
+            this.run_btn.Enabled = false;
+            this.run_btn.Location = new System.Drawing.Point(418, 116);
+            this.run_btn.Name = "run_btn";
+            this.run_btn.Size = new System.Drawing.Size(114, 23);
+            this.run_btn.TabIndex = 26;
+            this.run_btn.Text = "Process Effects";
+            this.run_btn.UseVisualStyleBackColor = true;
+            this.run_btn.Click += new System.EventHandler(this.run_btn_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 488);
+            this.ClientSize = new System.Drawing.Size(624, 442);
+            this.Controls.Add(this.run_btn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.destinationType_cb);
@@ -438,7 +439,6 @@ namespace AWS_DynamoDB_Manager
         private System.Windows.Forms.ToolStripMenuItem settingsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.Label source_label;
-        private System.Windows.Forms.Button showBtn;
         private Classes.Controls.ImprovedComboBox sourceTableCombo;
         private System.Windows.Forms.GroupBox statusGroup;
         private System.Windows.Forms.Label clientStatusMarker;
@@ -467,6 +467,7 @@ namespace AWS_DynamoDB_Manager
         private System.Windows.Forms.DataGridViewButtonColumn col_up;
         private System.Windows.Forms.DataGridViewButtonColumn col_down;
         private System.Windows.Forms.DataGridViewButtonColumn col_delete;
+        private System.Windows.Forms.Button run_btn;
     }
 }
 

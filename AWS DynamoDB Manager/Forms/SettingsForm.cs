@@ -1,12 +1,6 @@
 ﻿using AWS_DynamoDB_Manager.Classes;
 using AWS_DynamoDB_Manager.Classes.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AWS_DynamoDB_Manager.Forms

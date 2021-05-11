@@ -1,10 +1,6 @@
 ﻿using AWS_DynamoDB_Manager.Classes;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AWS_DynamoDB_Manager.Forms
@@ -18,11 +14,27 @@ namespace AWS_DynamoDB_Manager.Forms
 
         protected override void OnLoad(EventArgs e)
         {
-            Manager.Preview.GenerateViews();
-            sourcePreview.DataSource = Manager.Preview.SourceView;
+            Manager.OpRunner.RunPreview();
+            sourcePreview.DataSource = Manager.OpRunner.SourceView;
             sourcePreview.ClearSelection();
-            destinationPreview.DataSource = Manager.Preview.DestinationView;
+            destinationPreview.DataSource = Manager.OpRunner.DestinationView;
             destinationPreview.ClearSelection();
+
+            // coloring
+            var operation = Manager.OpRunner.Operations[Manager.OpRunner.OpIndex];
+            if(operation.Effect == OperationType.Schema)
+            {
+                SchemaOp schemaOp = (SchemaOp)operation;
+                if (sourcePreview.Columns.Contains(schemaOp.SourceField))
+                {
+                    sourcePreview.Columns[schemaOp.SourceField].HeaderCell.Style.BackColor = Color.OrangeRed;
+                }
+                if (destinationPreview.Columns.Contains(schemaOp.DestinationField))
+                {
+                    destinationPreview.Columns[schemaOp.DestinationField].HeaderCell.Style.BackColor = Color.LimeGreen;
+                }
+            }
+
             base.OnLoad(e);
         }
     }

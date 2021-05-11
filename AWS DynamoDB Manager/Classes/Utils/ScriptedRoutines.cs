@@ -3,7 +3,6 @@ using AWS_DynamoDB_Manager.Classes.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AWS_DynamoDB_Manager.Classes
 {
@@ -37,7 +36,7 @@ namespace AWS_DynamoDB_Manager.Classes
                 keyfobs.Add(keyfob);
             }
 
-            var items = users.ToList().AddRangeAndReturn(vehicles).AddRangeAndReturn(keyfobs);
+            var items = users.AddRangeAndReturn(vehicles).AddRangeAndReturn(keyfobs);
 
             for (int i = 0; i <= items.Count / 25; i++)
             {

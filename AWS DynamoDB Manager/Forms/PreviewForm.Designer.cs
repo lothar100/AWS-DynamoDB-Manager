@@ -38,6 +38,7 @@ namespace AWS_DynamoDB_Manager.Forms
             // sourcePreview
             // 
             this.sourcePreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.sourcePreview.EnableHeadersVisualStyles = false;
             this.sourcePreview.Location = new System.Drawing.Point(12, 12);
             this.sourcePreview.MultiSelect = false;
             this.sourcePreview.Name = "sourcePreview";
@@ -50,6 +51,7 @@ namespace AWS_DynamoDB_Manager.Forms
             // destinationPreview
             // 
             this.destinationPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.destinationPreview.EnableHeadersVisualStyles = false;
             this.destinationPreview.Location = new System.Drawing.Point(12, 230);
             this.destinationPreview.MultiSelect = false;
             this.destinationPreview.Name = "destinationPreview";

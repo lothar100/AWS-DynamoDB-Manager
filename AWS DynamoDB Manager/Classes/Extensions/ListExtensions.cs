@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AWS_DynamoDB_Manager.Classes.Extensions
@@ -41,6 +42,17 @@ namespace AWS_DynamoDB_Manager.Classes.Extensions
             list[index] = temp;
 
             return list;
+        }
+
+        public static Dictionary<T, U> UniquePairs<T, U>(this List<Dictionary<T, U>> Items)
+        {
+            var unique_pairs = new Dictionary<T, U>();
+            Items.ForEach((item) =>
+            {
+                var pairs = item.Where((pair) => unique_pairs.ContainsKey(pair.Key) == false).GetEnumerator();
+                while (pairs.MoveNext()) unique_pairs.Add(pairs.Current.Key, pairs.Current.Value);
+            });
+            return unique_pairs;
         }
     }
 }
