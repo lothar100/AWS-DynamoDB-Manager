@@ -93,6 +93,7 @@ namespace AWS_DynamoDB_Manager.Classes
                 
                 var newZone = new Dictionary<string, AttributeValue>();
                 newZone.Add("userID", userID);
+                newZone.Add("zoneID", userID);
                 newZone.Add("ID", new AttributeValue($"Zone{userID.S}"));
                 newZone.Add("tag", new AttributeValue("Zone"));
                 newZone.Add("authedStalls", zone["authedStalls"]);
