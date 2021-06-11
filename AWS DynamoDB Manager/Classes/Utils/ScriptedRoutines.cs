@@ -135,7 +135,7 @@ namespace AWS_DynamoDB_Manager.Classes
                 keyfob.Add("ID", new AttributeValue($"KeyFob{fobID}"));
                 keyfob.Add("tag", new AttributeValue("KeyFob"));
                 keyfob.Add("kfLookup", new AttributeValue(fobID));
-                keyfob.Add("kfDisplay", new AttributeValue(fobID));
+                keyfob.Add("kfDisplay", user["usrID"]);
                 keyfob.Add("created", user["created"]);
                 keyfob.Add("modified", user["modified"]);
                 keyfob.Add("reservedStatus", user["reservedStatus"]);
