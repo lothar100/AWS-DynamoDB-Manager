@@ -90,11 +90,12 @@ namespace AWS_DynamoDB_Manager.Classes
             foreach (var zone in zones)
             {
                 var userID = users.First(user => user.ContainsKey("keyFob") && user["keyFob"].S.Equals(zone["keyFob"].S))["usrID"];
-                
+                if (userID.S.Equals("1")) continue;
+
                 var newZone = new Dictionary<string, AttributeValue>();
                 newZone.Add("userID", userID);
-                newZone.Add("zoneID", userID);
-                newZone.Add("ID", new AttributeValue($"Zone{userID.S}"));
+                newZone.Add("zoneID", new AttributeValue("1"));
+                newZone.Add("ID", new AttributeValue("Zone1"));
                 newZone.Add("tag", new AttributeValue("Zone"));
                 newZone.Add("authedStalls", zone["authedStalls"]);
                 newZone.Add("checked", zone["checked"]);
